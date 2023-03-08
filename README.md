@@ -63,13 +63,13 @@ Here is the structure of the [testing input directory](/inputs/). This input dir
 |-- scDEA_covariates.tab
 ```
 
-#### Main input directory ([inputs/](/inputs/))
+#### 1. Main inputs: [inputs/](/inputs/)
 It contains a directory for each Azimuth's level, **[L1](/inputs/L1/)** or L2, with the main outputs per cell type from WG3 (I): 
 * **${cell_type}.Exp.txt:** Pseudobulk gene expression matrix per donor-pool combination (PFlogPF normalization + mean on QC-filtered single-cell gene expression matrix)
 * **${cell_type}.Qced.Normalized.SCs.Rds:** QC-filtered single-cell gene expression matrix
-* **${cell_type}.covariates.txt:** Donor metadata (from the psam file in WG1 pipeline)
+* **${cell_type}.covariates.txt:** Sample metadata (from the psam file in WG1 pipeline)
 
-#### DEA covariates files: sc-DEA ([scDEA_covariates.tab](/scDEA_covariates.tab)) and pseudobulk-DEA ([pseudobulkDEA_covariates.tab](/pseudobulkDEA_covariates.tab))
+#### 2. DEA covariates files: sc-DEA ([scDEA_covariates.tab](/scDEA_covariates.tab)) and pseudobulk-DEA ([pseudobulkDEA_covariates.tab](/pseudobulkDEA_covariates.tab))
 A priori, these files should not be modified. Each tsv file that has in the:
 * 1st column (covariate): Covariates included in the model
 * 2nd column (type): Fixed/random effect
@@ -77,7 +77,7 @@ A priori, these files should not be modified. Each tsv file that has in the:
 
 *Of note*:
 * Tab separated.
-* The values of the 1st column (covariate) should be the same as the ones in the [pseudobulk-](/inputs/L1/B.Exp.txt) and [sc-](/inputs/L1/Qced.Normalized.SCs.Rds)gene expression files, and in the [donor metadata file](/inputs/L1/B.covariates.txt).  
+* The values of the 1st column (covariate) should be the same as the ones in the [pseudobulk-](/inputs/L1/B.Exp.txt) and [sc-](/inputs/L1/Qced.Normalized.SCs.Rds)gene expression files, and in the [sample metadata file](/inputs/L1/B.covariates.txt).  
 * This file must have this header. 
 * The covariates files provided for testing have the following structure:
 
@@ -97,30 +97,27 @@ pseudobulk-DEA ([pseudobulkDEA_covariates.tab](/pseudobulkDEA_covariates.tab))
 | CellCount  | fixed  | integer  | 
 | Pool  | random  | factor  |
 
+#### 3. Pseudobulk aggregation file: [pseudobulkDEA_aggregates.tab](/pseudobulkDEA_aggregates.tab)
+A priori, this filee should not be modified. Each tsv file that has in the:
+* 1st column (simplified): Simplified aggregation variable
+* 2nd column (complete): Complete aggregation variable
+
+*Of note*:
+* Tab separated.
+* All the values should appear as column names of the [sample metadata file](/inputs/L1/B.covariates.txt). 
+* The values of the 2nd column (complete) correspond to the column names of the [pseudobulk-gene expressio nfile](/inputs/L1/B.Exp.txt).
+* This file must have this header. 
+* The pseudobulk aggregation file files provided for testing have the following structure:
+| simplified  | complete | 
+| ------------- | ------------- | ------------- | 
+| Donor  | Donor;Pool  | 
+
 ### Optional Data
 
 **wg3-sc_pseudobulk_DEA/**  
 ```bash
 |-- donor_sample.tab
 ```
-#### Sample information associated to the donor ([donor_sample.tab](/donor_sample.tab))
-This file is only needed if you have more than one sample per donor (e.g., stimulated vs. non-stimulated samples from the same donor, etc...). In this case, you need to run the **[subsetting script](/subset_by_metadata.R)** to select individuals with specifics characteristics (e.g., only non-stimulated samples, etc...). For this analysis, we ask you to only select european individuals and non-stimulated samples.
-
-This is a tsv file that has in the:
-* 1st column (type): Donor or sample metadata information.
-* 2nd column (covariate): Metadata variable. 
-* 3rd column (level): Category or categories to select of the associated donor/sample-metadata variable.
-
-*Of note*:
-* Tab separated.
-* The values of the 2nd column (covariate) should be the same as the ones in the [pseudobulk-](/inputs/L1/B.Exp.txt) and [sc-](/inputs/L1/Qced.Normalized.SCs.Rds)gene expression files, and in the [donor metadata file](/inputs/L1/B.covariates.txt).  
-* This file must have this header. 
-* The sample information file provided for testing has the following structure:
-
-| type  | covariate | level  | 
-| ------------- | ------------- | ------------- | 
-| Donor  | Provided_Ancestry  | EUR  | 
-| Sample  | Stimulation  | UT  | 
 
 -------
 
