@@ -19,7 +19,7 @@ If you have any questions or issues, feel free to open an issue or directly emai
 ## Required Software
 **R** >=4.1.2 version: You need to install the packages loaded in the:
 * Two main DEA scripts: [sc-DEA](/scDEA_MAST_glmer.R) and [pseudobulk-DEA](/pseudobulkDEA_limmadream.R).
-* Additional scripts in the [scripts](/scripts/) directory, which contain the functions called in the two main DEA scripts.
+* Additional scripts in the [scripts](/scripts/) directory (which contain the functions called in the two main DEA scripts).
 
 -------
 
@@ -64,7 +64,7 @@ Here is the structure of the [testing input directory](/inputs/). This input dir
 ```
 
 #### 1. Main inputs: [inputs/](/inputs/)
-It contains a directory for each Azimuth's level, **[L1](/inputs/L1/)** or L2, with the main outputs per cell type from WG3 (I): 
+It contains a directory for each Azimuth's level (**[L1](/inputs/L1/)** or L2) with the main outputs per cell type from WG3 (I): 
 * **${cell_type}.Exp.txt:** Pseudobulk gene expression matrix per donor-pool combination (PFlogPF normalization + mean on QC-filtered single-cell gene expression matrix)
 * **${cell_type}.Qced.Normalized.SCs.Rds:** QC-filtered single-cell gene expression matrix
 * **${cell_type}.covariates.txt:** Sample metadata (from the psam file in WG1 pipeline)
@@ -81,7 +81,8 @@ A priori, these files should not be modified. Each tsv file that has in the:
 * This file must have this header. 
 * The covariates files provided for testing have the following structure:
 
-sc-DEA ([scDEA_covariates.tab](/scDEA_covariates.tab))
+**2.1. sc-DEA** ([scDEA_covariates.tab](/scDEA_covariates.tab)):
+
 | covariate  | type | class  | 
 | ------------- | ------------- | ------------- | 
 | SEX  | fixed  | factor  | 
@@ -89,7 +90,8 @@ sc-DEA ([scDEA_covariates.tab](/scDEA_covariates.tab))
 | Donor_Pool  | random  | factor  | 
 | Pool  | random  | factor  | 
 
-pseudobulk-DEA ([pseudobulkDEA_covariates.tab](/pseudobulkDEA_covariates.tab))
+**2.2. pseudobulk-DEA** ([pseudobulkDEA_covariates.tab](/pseudobulkDEA_covariates.tab)):
+
 | covariate  | type | class  | 
 | ------------- | ------------- | ------------- | 
 | SEX  | fixed  | factor  | 
@@ -99,8 +101,8 @@ pseudobulk-DEA ([pseudobulkDEA_covariates.tab](/pseudobulkDEA_covariates.tab))
 
 #### 3. Pseudobulk aggregation file: [pseudobulkDEA_aggregates.tab](/pseudobulkDEA_aggregates.tab)
 A priori, this filee should not be modified. Each tsv file that has in the:
-* 1st column (simplified): Simplified aggregation variable
-* 2nd column (complete): Complete aggregation variable
+* 1st column (simplified): Simplified aggregation variable.
+* 2nd column (complete): Complete aggregation variable.
 
 *Of note*:
 * Tab separated.
@@ -108,9 +110,10 @@ A priori, this filee should not be modified. Each tsv file that has in the:
 * The values of the 2nd column (complete) correspond to the column names of the [pseudobulk-gene expressio nfile](/inputs/L1/B.Exp.txt).
 * This file must have this header. 
 * The pseudobulk aggregation file files provided for testing have the following structure:
-| simplified  | complete | 
-| ------------- | ------------- | ------------- | 
-| Donor  | Donor;Pool  | 
+
+| simplified  | complete |       
+| ------------- | ------------- |     
+| Donor  | Donor;Pool  |     
 
 
 -------
@@ -170,7 +173,7 @@ L1
 * You should **run** the [sc-DEA](/scDEA_MAST_glmer.R) per **each combination** of: Azimuth's cell level - cell type - phenotype:
     - Azimuth's cell level (`-l`): L1 or L2.
     - Cell type (`-c`): L1 and L2 cell types.
-    - Phenotype (`v`): SEX and age.
+    - Phenotype (`-v`): SEX and age.
     
 ### Running the pseudobulk-DEA script
 
@@ -214,7 +217,7 @@ L1
 * You should **run** the [pseudobulk-DEA](/pseudobulkDEA_limmadream.R) per **each combination** of: Azimuth's cell level - cell type - phenotype:
     - Azimuth's cell level (`-l`): L1 or L2.
     - Cell type (`-c`): L1 and L2 cell types.
-    - Phenotype (`v`): SEX and age.
+    - Phenotype (`-v`): SEX and age.
 
 **3.** Additional parameters of [pseudobulk-DEA](/pseudobulkDEA_limmadream.R):
 
