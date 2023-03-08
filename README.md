@@ -167,8 +167,8 @@ L1
 ```
 
 *Of note:*
-* You should **run** the [sc-DEA](/scDEA_MAST_glmer.R) per **each combination** of: Azimuth's level - cell type - phenotype:
-    - Azimuth's level (`-l`): L1 or L2.
+* You should **run** the [sc-DEA](/scDEA_MAST_glmer.R) per **each combination** of: Azimuth's cell level - cell type - phenotype:
+    - Azimuth's cell level (`-l`): L1 or L2.
     - Cell type (`-c`): L1 and L2 cell types.
     - Phenotype (`v`): SEX and age.
     
@@ -211,12 +211,12 @@ L1
 ```
 
 *Of note:*
-* You should **run** the [pseudobulk-DEA](/pseudobulkDEA_limmadream.R) per **each combination** of: Azimuth's level - cell type - phenotype:
-    - Azimuth's level (`-l`): L1 or L2.
+* You should **run** the [pseudobulk-DEA](/pseudobulkDEA_limmadream.R) per **each combination** of: Azimuth's cell level - cell type - phenotype:
+    - Azimuth's cell level (`-l`): L1 or L2.
     - Cell type (`-c`): L1 and L2 cell types.
     - Phenotype (`v`): SEX and age.
 
-**3.** Additional parameters:
+**3.** Additional parameters of [pseudobulk-DEA](/pseudobulkDEA_limmadream.R):
 
 3.1. It can be that `variancePartition::dream()` fails due to genes with high weights. It has been observed in some specific cases, specially when using sum to aggregate single-cell to pseudobulk. These are some potential solutions proposed by the `variancePartition` developer (See the [github issue](https://github.com/GabrielHoffman/variancePartition/issues/66) for further details):
 
@@ -232,7 +232,7 @@ L1
 -------
 
 ## Running time and memory requirements
-* [sc-DEA](/scDEA_MAST_glmer.R) and [pseudobulk-DEA](/pseudobulkDEA_limmadream.R): To speed up the running time and improve the memory requirements of these two main scripts, we recommend to submit each of the commands of the **Running the sc-DEA script** and the **Running the pseudobulk-DEA script** section as an independent job on your HPC infrastructure (i.e., run each job as an element of a job array). In this case, each job will be defined by the combination of: `dataset - cell level - cell type - phenotype`.  
+* [sc-DEA](/scDEA_MAST_glmer.R) and [pseudobulk-DEA](/pseudobulkDEA_limmadream.R): To speed up the running time and improve the memory requirements of these two main scripts, we recommend to submit each of the commands of the **Running the sc-DEA script** and the **Running the pseudobulk-DEA script** section as an independent job on your HPC infrastructure (i.e., run each job as an element of a job array). In this case, each job will be defined by the combination of: `Azimuth's cell level - cell type - phenotype`.  
 
 * An example of a SLURM job file:
 
