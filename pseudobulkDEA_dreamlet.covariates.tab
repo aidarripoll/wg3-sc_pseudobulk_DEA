@@ -1,0 +1,4 @@
+covariate type  class
+SEX fixed  factor
+age  fixed  integer
+Pool  random factor
