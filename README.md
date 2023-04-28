@@ -9,7 +9,7 @@ We provide **three main scripts** to peform **differential expression analysis (
 **Of note**: 
 * You will only need to run the two following scripts: [**sc-DEA**](/scDEA_MAST_glmer.R) (script 1) and [**pseudobulk-DEA updated**](/pseudobulkDEA_dreamlet.R) (script 2). 
 
-* This analyses are meant to be run on scRNA-seq data composed by **only one sample per donor**. In case you have more than one sample per donor (e.g., stimulated vs. non-stimulated samples from the same donor, etc...) you should modify some configuration files ([scDEA_covariates.tab](/scDEA_covariates.tab), [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab), [pseudobulkDEA_limmadream.covariates.tab](/pseudobulkDEA_limmadream.covariates.tab), and [pseudobulkDEA_limmadream.aggregates.tab](/pseudobulkDEA_limmadream.aggregates.tab))
+* These analyses are meant to be run on scRNA-seq data composed by **only one sample per donor**. In case you have more than one sample per donor (e.g., stimulated vs. non-stimulated samples from the same donor, etc...) you should modify some configuration files ([scDEA_covariates.tab](/scDEA_covariates.tab), [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab), [pseudobulkDEA_limmadream.covariates.tab](/pseudobulkDEA_limmadream.covariates.tab), and [pseudobulkDEA_limmadream.aggregates.tab](/pseudobulkDEA_limmadream.aggregates.tab))
 
 * To run these scripts you should have **successfully run** the following sc-eQTLGen consortium pipelines: **WG1**, **WG2** and **WG3 (I)** 
 
