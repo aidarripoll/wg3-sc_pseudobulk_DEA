@@ -302,9 +302,13 @@ L1
 ## Running time and memory requirements
 * [sc-DEA](/scDEA_MAST_glmer.R), [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R), and [pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R): To speed up the running time and improve the memory requirements of these three main scripts, we recommend to submit each of the commands of the sections *'Running the sc-DEA script'* and *'Running the pseudobulk-DEA script updated'* as an independent job on your HPC infrastructure (i.e., run each job as an element of a job array). In the case of the [**sc-DEA**](/scDEA_MAST_glmer.R), each job will be defined by the combination of: `Azimuth's cell level - cell type - phenotype`. In the case of the [**pseudobulk-DEA updated**](/pseudobulkDEA_dreamlet.R), each job will be defined by the combination of: `Azimuth's cell level - cell type`.
 
-* The running time for the major cell type (CD4 T cells) in a dataset of 72 individuals using `--cpus-per-task=XXX` and `--nodes=XXX` was:
-1. [**sc-DEA**](/scDEA_MAST_glmer.R) --> 
-1. [**pseudobulk-DEA updated**](/pseudobulkDEA_dreamlet.R) --> 
+* The HPC resources in for the major Azimuth's l1 cell type (CD4 T cells) in the V2 unstimulated data from [**Oelen et al, 2022**](https://www.nature.com/articles/s41467-022-30893-), which is composed by 72 individuals and 33,505 cells, using the defined SLURM's `sbatch` parameters (`--nodes=1`, `--ntasks=1`, `--cpus-per-task=48`, `--tasks-per-node=1`) in [MareNostrum 4](https://www.bsc.es/supportkc/docs/MareNostrum4/intro/), where each node has 48 cores of 1.880GB/core, were:
+1. [**sc-DEA**](/scDEA_MAST_glmer.R): 
+* testing SEX: Elapsed (05:17:54), MaxRSS (19690752K) and CPUTime (10-14:19:12)
+* testing age: Elapsed (05:17:42), MaxRSS (19191280K) and CPUTime (10-14:09:36)
+
+2. [**pseudobulk-DEA updated**](/pseudobulkDEA_dreamlet.R): 
+* testing SEX and age (in the same script): 
 
 
 
