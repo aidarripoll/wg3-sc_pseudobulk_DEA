@@ -21,13 +21,13 @@ If you have any questions or issues, feel free to open an issue or directly emai
 
 ## Required Software
 **R** >=4.1.2 version: You need to install the packages loaded in the:
-* Three main DEA scripts: [sc-DEA](/scDEA_MAST_glmer.R), [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R).[pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R).
-* Additional scripts in the [scripts](/scripts/) directory (which contain the functions called in the two main DEA scripts).
+* Three main DEA scripts: [sc-DEA](/scDEA_MAST_glmer.R), [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R), and [pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R).
+* Additional scripts in the [scripts](/scripts/) directory (which contain the functions called in the three main DEA scripts).
 
 -------
 
 ## Required Input
-This section explains the input data and it’s structure to run the three main scripts: [sc-DEA](/scDEA_MAST_glmer.R), [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R).[pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R).
+This section explains the input data and it’s structure to run the three main scripts: [sc-DEA](/scDEA_MAST_glmer.R), [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R), and [pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R).
 
 **Of note**: To follow better the explanations in the **Required Input** section, you can clone this repository and change your current working directory. 
 
@@ -141,16 +141,16 @@ git clone https://github.com/aidarripoll/wg3-sc_pseudobulk_DEA.git
 cd wg3-sc_pseudobulk_DEA
 ```
 
-* This analysis is meant to be run on scRNA-seq data composed by **only one sample per donor**. In case you have more than one sample per donor (e.g., stimulated vs. non-stimulated samples from the same donor, etc...) you should modify some configuration files ([scDEA_covariates.tab](/scDEA_covariates.tab), [pseudobulkDEA_covariates.tab](/pseudobulkDEA_covariates.tab), and [pseudobulkDEA_aggregates.tab](/pseudobulkDEA_aggregates.tab) ). For this analysis, we are only using european individuals and non-stimulated samples, which has been previously selected in WG3 (I) pipeline.
+* This analysis is meant to be run on scRNA-seq data composed by **only one sample per donor**. In case you have more than one sample per donor (e.g., stimulated vs. non-stimulated samples from the same donor, etc...) you should modify some configuration files ([scDEA_covariates.tab](/scDEA_covariates.tab), [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab), [pseudobulkDEA_limmadream.covariates.tab](/pseudobulkDEA_limmadream.covariates.tab), and [pseudobulkDEA_limmadream.aggregates.tab](/pseudobulkDEA_limmadream.aggregates.tab)). For this analysis, we are only using european individuals and non-stimulated samples, which has been previously selected in WG3 (I) pipeline.
 
-* The **functions** called in the **mandatory sc/pseudobulk-DEA scripts** ([sc-DEA](/scDEA_MAST_glmer.R) and in the [pseudobulk-DEA](/pseudobulkDEA_limmadream.R)) are defined in the [additional scripts](/scripts/).
+* The **functions** called in the **sc/pseudobulk-DEA scripts** ([sc-DEA](/scDEA_MAST_glmer.R), [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R).[pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R)) are defined in the [additional scripts](/scripts/).
 
 
 ### Running the sc-DEA script
 
 **1.** Set common environmental variables:  
 ```
-cell_level=L1
+cell_level=L1 #default
 cell_type=B
 phenotype=SEX #or age
 input_directory=inputs #default
@@ -180,26 +180,75 @@ L1
         |-- pbmc_sca.rds
         |-- pbmc_sca_raw.rds
         |-- pbmc_so.rds
+
 ```
 
 *Of note:*
-* You should **run** the [sc-DEA](/scDEA_MAST_glmer.R) per **each combination** of: Azimuth's cell level - cell type - phenotype:
+* You should **run** the [sc-DEA](/scDEA_MAST_glmer.R) per **each combination** of Azimuth's cell level - cell type - phenotype:
     - Azimuth's cell level (`-l`): L1 or L2.
     - Cell type (`-c`): L1 and L2 cell types.
     - Phenotype (`-v`): SEX and age.
-    
-### Running the pseudobulk-DEA script
+
+### Running the pseudobulk-DEA script (updated)
 
 **1.** Set common environmental variables:  
 ```
-cell_level=L1
+cell_level=L1 #default
+cell_type=B
+input_directory=inputs #default
+output_directory=pseudobulkDEA_dreamlet #default
+```
+
+**2.** Running the **[pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R)**:
+
+```
+Rscript pseudobulkDEA_dreamlet.R -l $cell_level -c $cell_type -i $input_directory -o $output_directory
+```
+
+The output directory (**[pseudobulkDEA_dreamlet/](/pseudobulkDEA_dreamlet/)**) has the following structure:
+```bash
+L1
+|   |-- B
+|        |-- SEX
+|            |-- plotVolcano.png
+|            |-- plotGeneHeatmap.png
+|            |-- plotPercentBars.png
+|            |-- plotVarPart.png
+|        |-- age
+|            |-- plotVolcano.png
+|            |-- plotGeneHeatmap.png
+|            |-- plotPercentBars.png
+|            |-- plotVarPart.png
+|    |-- plotVoom.png
+|    |-- dea_vp_topTable.rds
+
+```
+
+*Of note:*
+* You should **run** the [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R) per **each combination** of Azimuth's cell level - cell type:
+    - Azimuth's cell level (`-l`): L1 or L2.
+    - Cell type (`-c`): L1 and L2 cell types.
+
+* This script is running both a **pseudobulk-DEA** and a **VariancePartition analysis**. However, some of the outputs will only be generated if we find differentially expressed genes (DEGs) (FDR<=0.05) with each condition (plotGeneHeatmap.png, plotPercentBars.png, and plotVarPart.png).
+
+* It runs the **pseudobulk-DEA** on the 'fixed' variables in [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab)
+
+**3.** Additional parameters of [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R):
+
+3.1. If you do not want to estimate the variance of your batch variable (Pool), you can set the `--vp_reduced TRUE`. The structure of the output directory will be the same as the previous one but it will have a subdirectory called 'vp_reduced'. 
+
+### Running the pseudobulk-DEA script (outdated)
+
+**1.** Set common environmental variables:  
+```
+cell_level=L1 #default
 cell_type=B
 phenotype=SEX #or age
 input_directory=inputs #default
 output_directory=pseudobulkDEA_limmadream #default
 ```
 
-**2.** Running the **[pseudobulk-DEA](/pseudobulkDEA_limmadream.R)**:
+**2.** Running the **[pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R)**:
 
 ```
 Rscript pseudobulkDEA_limmadream.R -l $cell_level -c $cell_type -v $phenotype -i $input_directory -o $output_directory
@@ -227,12 +276,12 @@ L1
 ```
 
 *Of note:*
-* You should **run** the [pseudobulk-DEA](/pseudobulkDEA_limmadream.R) per **each combination** of: Azimuth's cell level - cell type - phenotype:
+* You should **run** the [pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R) per **each combination** of Azimuth's cell level - cell type - phenotype:
     - Azimuth's cell level (`-l`): L1 or L2.
     - Cell type (`-c`): L1 and L2 cell types.
     - Phenotype (`-v`): SEX and age.
 
-**3.** Additional parameters of [pseudobulk-DEA](/pseudobulkDEA_limmadream.R):
+**3.** Additional parameters of [pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R):
 
 3.1. It can be that `variancePartition::dream()` fails due to genes with high weights. It has been observed in some specific cases, specially when using sum to aggregate single-cell to pseudobulk. These are some potential solutions proposed by the `variancePartition` developer (See the [github issue](https://github.com/GabrielHoffman/variancePartition/issues/66) for further details):
 
@@ -248,7 +297,7 @@ L1
 -------
 
 ## Running time and memory requirements
-* [sc-DEA](/scDEA_MAST_glmer.R) and [pseudobulk-DEA](/pseudobulkDEA_limmadream.R): To speed up the running time and improve the memory requirements of these two main scripts, we recommend to submit each of the commands of the **Running the sc-DEA script** and the **Running the pseudobulk-DEA script** section as an independent job on your HPC infrastructure (i.e., run each job as an element of a job array). In this case, each job will be defined by the combination of: `Azimuth's cell level - cell type - phenotype`.  
+* [sc-DEA](/scDEA_MAST_glmer.R), [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R), and [pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R): To speed up the running time and improve the memory requirements of these three main scripts, we recommend to submit each of the commands of the **Running the sc-DEA script** and the **Running the pseudobulk-DEA script** section as an independent job on your HPC infrastructure (i.e., run each job as an element of a job array). In this case, each job will be defined by the combination of: `Azimuth's cell level - cell type - phenotype`.  
 
 * An example of a SLURM job file:
 
