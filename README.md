@@ -7,15 +7,14 @@ We provide **three main scripts** to peform **differential expression analysis (
 3. **[pseudobulk level (pseudobulk-DEA outdated)](/pseudobulkDEA_limmadream.R)**: using the [limma dream](https://academic.oup.com/bioinformatics/article/37/2/192/5878955) glmer implementation. This script was replaced by the **[previous script (2)](/pseudobulkDEA_dreamlet.R)** using the [dreamlet](https://www.biorxiv.org/content/10.1101/2023.03.17.533005v1) glmer implementation. 
 
 **Of note**: 
-* To peform the **pseudobulk level (pseudobulk-DEA)** we will use the **[updated script (2)](/pseudobulkDEA_dreamlet.R)** using [dreamlet](https://www.biorxiv.org/content/10.1101/2023.03.17.533005v1) instead of the **[outdated script (3)](/pseudobulkDEA_limmadream.R)** using [limma dream](https://academic.oup.com/bioinformatics/article/37/2/192/5878955).
+* You will only need to run the two following scripts: [**sc-DEA**](/scDEA_MAST_glmer.R) (script 1) and [**pseudobulk-DEA updated**](/pseudobulkDEA_dreamlet.R) (script 2). 
 
-* This analysis is meant to be run on scRNA-seq data composed by **only one sample per donor**. In case you have more than one sample per donor (e.g., stimulated vs. non-stimulated samples from the same donor, etc...) you should modify some configuration files ([scDEA_covariates.tab](/scDEA_covariates.tab), [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab), [pseudobulkDEA_limmadream.covariates.tab](/pseudobulkDEA_limmadream.covariates.tab), and [pseudobulkDEA_limmadream.aggregates.tab](/pseudobulkDEA_limmadream.aggregates.tab))
+* This analyses are meant to be run on scRNA-seq data composed by **only one sample per donor**. In case you have more than one sample per donor (e.g., stimulated vs. non-stimulated samples from the same donor, etc...) you should modify some configuration files ([scDEA_covariates.tab](/scDEA_covariates.tab), [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab), [pseudobulkDEA_limmadream.covariates.tab](/pseudobulkDEA_limmadream.covariates.tab), and [pseudobulkDEA_limmadream.aggregates.tab](/pseudobulkDEA_limmadream.aggregates.tab))
 
 * To run these scripts you should have **successfully run** the following sc-eQTLGen consortium pipelines: **WG1**, **WG2** and **WG3 (I)** 
 
 ## Contact
 If you have any questions or issues, feel free to open an issue or directly email Aida Ripoll-Cladellas (aida.ripoll@bsc.es)
-
 
 -------
 
@@ -27,9 +26,11 @@ If you have any questions or issues, feel free to open an issue or directly emai
 -------
 
 ## Required Input
-This section explains the input data and it’s structure to run the three main scripts: [sc-DEA](/scDEA_MAST_glmer.R), [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R), and [pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R).
+This section explains the input data and it’s structure to run the three main scripts: [sc-DEA](/scDEA_MAST_glmer.R), [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R), and [pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R). 
 
-**Of note**: To follow better the explanations in the **Required Input** section, you can clone this repository and change your current working directory. 
+**Of note**: 
+* Remember that you only need to run the two following scripts: [**sc-DEA**](/scDEA_MAST_glmer.R) and [**pseudobulk-DEA updated**](/pseudobulkDEA_dreamlet.R).
+* To follow better the explanations in the **Required Input** section, you can clone this repository and change your current working directory. 
 
 ```
 git clone https://github.com/aidarripoll/wg3-sc_pseudobulk_DEA.git
@@ -39,9 +40,11 @@ cd wg3-sc_pseudobulk_DEA
 ### Test Data
 We have provided some **testing inputs** in the **[inputs directory](inputs/)** that contains the B cells outputs (Azimuth's level 1) from WG3 (I) pipeline. 
 
-**Of note**: These files have been anonymized and they are significantly down-sized and sub-sampled versions of the whole B cells outputs from WG3 (I). Specifically, the total number of cells is 663 from 40 donors, and the number of genes is 50 and 500 for the sc- and pseudobulk-DEA, respectively.
+**Of note**: 
 
-Here is the structure of the [testing input directory](/inputs/). This input directory (*inputs/*) should have the same structure as the WG3 (I) pipeline output directory. We will need only the following files since the other ones will be used for the eQTL calling pipeline in the WG3 (II):
+* These files have been anonymized and they are significantly down-sized and sub-sampled versions of the whole B cells outputs from WG3 (I). The total number of cells is 663 from 40 donors, and the number of genes is 50 and 500 for the sc- and pseudobulk-DEA, respectively.
+
+* Here is the structure of the [testing input directory](/inputs/). This input directory (*inputs/*) should have the same structure as the WG3 (I) pipeline output directory. We will need only the following files since the other ones will be used for the eQTL calling pipeline in the WG3 (II):
 
 **inputs/**    
 ```bash
@@ -62,10 +65,10 @@ Here is the structure of the [testing input directory](/inputs/). This input dir
 |   |   |-- B.Qced.Normalized.SCs.Rds
 |   |   |-- B.covariates.txt 
 |   |-- donor_pool_stim.txt
-|-- pseudobulkDEA_dreamlet.covariates.tab
-|-- pseudobulkDEA_limmadream.covariates.tab
+|-- scDEA_covariates.tab 
+|-- pseudobulkDEA_dreamlet.covariates.tab 
+|-- pseudobulkDEA_limmadream.covariates.tab 
 |-- pseudobulkDEA_limmadream.aggregates.tab
-|-- scDEA_covariates.tab
 ```
 
 #### 1. Main inputs: [inputs/](/inputs/)
@@ -141,7 +144,7 @@ git clone https://github.com/aidarripoll/wg3-sc_pseudobulk_DEA.git
 cd wg3-sc_pseudobulk_DEA
 ```
 
-* This analysis is meant to be run on scRNA-seq data composed by **only one sample per donor**. In case you have more than one sample per donor (e.g., stimulated vs. non-stimulated samples from the same donor, etc...) you should modify some configuration files ([scDEA_covariates.tab](/scDEA_covariates.tab), [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab), [pseudobulkDEA_limmadream.covariates.tab](/pseudobulkDEA_limmadream.covariates.tab), and [pseudobulkDEA_limmadream.aggregates.tab](/pseudobulkDEA_limmadream.aggregates.tab)). For this analysis, we are only using european individuals and non-stimulated samples, which has been previously selected in WG3 (I) pipeline.
+* These analyses are meant to be run on scRNA-seq data composed by **only one sample per donor**. In case you have more than one sample per donor (e.g., stimulated vs. non-stimulated samples from the same donor, etc...) you should modify some configuration files ([scDEA_covariates.tab](/scDEA_covariates.tab), [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab), [pseudobulkDEA_limmadream.covariates.tab](/pseudobulkDEA_limmadream.covariates.tab), and [pseudobulkDEA_limmadream.aggregates.tab](/pseudobulkDEA_limmadream.aggregates.tab)). For this analysis, we are only using european individuals and non-stimulated samples, which has been previously selected in WG3 (I) pipeline.
 
 * The **functions** called in the **sc/pseudobulk-DEA scripts** ([sc-DEA](/scDEA_MAST_glmer.R), [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R).[pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R)) are defined in the [additional scripts](/scripts/).
 
@@ -297,12 +300,12 @@ L1
 -------
 
 ## Running time and memory requirements
-* [sc-DEA](/scDEA_MAST_glmer.R), [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R), and [pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R): To speed up the running time and improve the memory requirements of these three main scripts, we recommend to submit each of the commands of the **Running the sc-DEA script** and the **Running the pseudobulk-DEA script** section as an independent job on your HPC infrastructure (i.e., run each job as an element of a job array). In this case, each job will be defined by the combination of: `Azimuth's cell level - cell type - phenotype`.  
+* [sc-DEA](/scDEA_MAST_glmer.R), [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R), and [pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R): To speed up the running time and improve the memory requirements of these three main scripts, we recommend to submit each of the commands of the sections *'Running the sc-DEA script'* and *'Running the pseudobulk-DEA script updated'* as an independent job on your HPC infrastructure (i.e., run each job as an element of a job array). In the case of the [**sc-DEA**](/scDEA_MAST_glmer.R), each job will be defined by the combination of: `Azimuth's cell level - cell type - phenotype`. In the case of the [**pseudobulk-DEA updated**](/pseudobulkDEA_dreamlet.R), each job will be defined by the combination of: `Azimuth's cell level - cell type`.
 
-* An example of a SLURM job file:
+* The running time for the major cell type (CD4 T cells) in a dataset of 72 individuals using `--cpus-per-task=XXX` and `--nodes=XXX` was:
+1. [**sc-DEA**](/scDEA_MAST_glmer.R) --> 
+1. [**pseudobulk-DEA updated**](/pseudobulkDEA_dreamlet.R) --> 
 
-* The running time and memory requirements for the largest combination (`dataset - cell level - cell type - phenotype`) in a dataset of 40 donors was:
-`--cpus-per-task=XXX` and `--nodes=XXX`. 
 
 
 
