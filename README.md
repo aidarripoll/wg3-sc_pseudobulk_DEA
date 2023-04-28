@@ -3,8 +3,8 @@
 We provide **three main scripts** to peform **differential expression analysis (DEA)** with different conditions, such as human phenotypes (e.g., sex or age) or stimulation conditions, using **single-cell RNA-seq data (scRNA-seq) (i.e., 10x Genomics)** at two different levels:
 
 1. **[single-cell level (sc-DEA)](/scDEA_MAST_glmer.R)**: using the [MAST](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-015-0844-5) glmer implementation.
-2. **[pseudobulk level (pseudobulk-DEA)](/pseudobulkDEA_dreamlet.R)**: using the [dreamlet](https://www.biorxiv.org/content/10.1101/2023.03.17.533005v1) glmer implementation.
-3. **[pseudobulk level (pseudobulk-DEA), not used anymore](/pseudobulkDEA_limmadream.R)**: using the [limma dream](https://academic.oup.com/bioinformatics/article/37/2/192/5878955) glmer implementation. This script was replaced by the **[previous script (2)](/pseudobulkDEA_dreamlet.R)** using the [dreamlet](https://www.biorxiv.org/content/10.1101/2023.03.17.533005v1) glmer implementation. 
+2. **[pseudobulk level (pseudobulk-DEA updated)](/pseudobulkDEA_dreamlet.R)**: using the [dreamlet](https://www.biorxiv.org/content/10.1101/2023.03.17.533005v1) glmer implementation.
+3. **[pseudobulk level (pseudobulk-DEA outdated)](/pseudobulkDEA_limmadream.R)**: using the [limma dream](https://academic.oup.com/bioinformatics/article/37/2/192/5878955) glmer implementation. This script was replaced by the **[previous script (2)](/pseudobulkDEA_dreamlet.R)** using the [dreamlet](https://www.biorxiv.org/content/10.1101/2023.03.17.533005v1) glmer implementation. 
 
 **Of note**: 
 * To peform the **pseudobulk level (pseudobulk-DEA)** we will use the **[updated script (2)](/pseudobulkDEA_dreamlet.R)** using [dreamlet](https://www.biorxiv.org/content/10.1101/2023.03.17.533005v1) instead of the **[outdated script (3)](/pseudobulkDEA_limmadream.R)** using [limma dream](https://academic.oup.com/bioinformatics/article/37/2/192/5878955).
