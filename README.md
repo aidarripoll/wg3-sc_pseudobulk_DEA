@@ -308,7 +308,7 @@ L1
 * testing age: Elapsed (05:17:42), MaxRSS (19191280K) and CPUTime (10-14:09:36)
 
 2. [**pseudobulk-DEA updated**](/pseudobulkDEA_dreamlet.R): 
-* testing SEX and age (in the same script): 
+* testing SEX and age (in the same script): Elapsed (00:19:35), MaxRSS (3467004K) and CPUTime (15:40:00)
 
 
 
