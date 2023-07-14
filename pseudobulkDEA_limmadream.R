@@ -37,7 +37,7 @@ cwd <- getwd()
 setwd(cwd)
 
 # Loading functions
-functions.fn <- 'scripts/pseudobulkDEA_limmadream_functions.R'
+functions.fn <- '/tools/wg3-sc_pseudobulk_DEA/scripts/pseudobulkDEA_limmadream_functions.R'
 print(paste0('Loading functions from: ', functions.fn))
 source(functions.fn)
 
