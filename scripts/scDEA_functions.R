@@ -23,19 +23,27 @@ modify_metadata_sc <- function(so, phenotype, covs_df){
   metadata <- so@meta.data
   cells_all <- nrow(metadata)
   print(paste0('Number of initial cells: ', cells_all))
-  
-  # Remove possible NAs
-  na.boolean <- any(is.na(metadata[[phenotype]]))
-  if(na.boolean){
-    print('Removing NAs in the phenotype...')
-    metadata <- metadata[-which(is.na(metadata[[phenotype]])),]
-    cells_notna <- nrow(metadata)
-    print(paste0('Number of not NA cells: ', cells_notna))
-  }
-  
+    
   # Create random factors variables in the metadata
   metadata <- metadata %>% separate(Donor_Pool, c('Donor', 'Pool'), ';;')
   
+  # Remove possible NAs
+  print('Removing potential NAs in the main phenotypes...')
+  sex_na.boolean <- any(is.na(metadata[['SEX']]))
+  if(sex_na.boolean){
+    n_na <- table(is.na(metadata[['SEX']]))[['TRUE']]
+    print(paste0('SEX NAs: ', n_na))
+    metadata <- metadata[-which(is.na(metadata[['SEX']])),]
+  }
+  age_na.boolean <- any(is.na(metadata[['age']]))
+  if(age_na.boolean){
+    n_na <- table(is.na(metadata[['age']]))[['TRUE']]
+    print(paste0('age NAs: ', n_na))
+    metadata <- metadata[-which(is.na(metadata[['age']])),]
+  }
+  cells_notna <- nrow(metadata)
+  print(paste0('Number of not NA cells: ', cells_notna))
+
   # Phenotype modifications
   if(phenotype=='SEX'){
     print(paste0('Relevel ', phenotype, '...'))
@@ -59,6 +67,17 @@ modify_metadata_sc <- function(so, phenotype, covs_df){
     metadata[[phenotype]] <- metadata$age^2
   }
   
+  # Report possible NAs
+  print('Removing potential remaining NAs in the tested phenotype...')
+  phe_na.boolean <- any(is.na(metadata[[phenotype]]))
+  if(phe_na.boolean){
+    n_na <- table(is.na(metadata[[phenotype]]))[['TRUE']]
+    print(paste0(phenotype, ' NAs: ', n_na))
+    metadata <- metadata[-which(is.na(metadata[[phenotype]])),]
+  }
+  cells_notna <- nrow(metadata)
+  print(paste0('Number of not NA cells: ', cells_notna))
+
   if(phenotype%in%c('SEX','age_cat', 'age_cat_all')){
     print(paste0('Order ', phenotype, ' factor levels...'))
     Group_order <- c('M','F')
@@ -89,7 +108,7 @@ modify_metadata_sc <- function(so, phenotype, covs_df){
   so <- so[,cells_kept]
   so@meta.data <- metadata
   rownames(so@meta.data) <- so@meta.data$Barcode
-  
+
   return(so)
 }
 
@@ -108,6 +127,7 @@ freq_sparse <- function(sc, na.rm = TRUE){
   return(out)
   }
 
+  
 # 4. Filter out lowly variable genes --> CDR (=cngeneson; cellular detection rate) --> Filter out lowly expressed genes
 preprocess_sca <- function(sca, freq_expr = 0.1){
   # Initial # of genes
