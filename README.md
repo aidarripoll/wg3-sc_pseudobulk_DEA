@@ -115,7 +115,7 @@ git clone https://github.com/aidarripoll/wg3-sc_pseudobulk_DEA.git
 cd wg3-sc_pseudobulk_DEA
 ```
 
-* These analyses are meant to be run on scRNA-seq data composed by **only one sample per donor**:
+* These analyses are meant to be run on scRNA-seq data composed by **only one sample per donor**. Some considerations:
 1. If you have biological replicates (e.g., stimulated vs. non-stimulated samples from the same donor, etc...), you will have to modify some configuration files ([scDEA.covariates.tab](/scDEA.covariates.tab), [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab))
 2. If you have technical replicates, we will only select the sample with the largest number of cells.
 
