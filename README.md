@@ -7,7 +7,7 @@ We provide **two main scripts** to perform **differential expression analysis (D
 
 **Of note**: 
 * These analyses are meant to be run on scRNA-seq data composed by **only one sample per donor**:
-1. If you have biological replicates (e.g., stimulated vs. non-stimulated samples from the same donor, etc...), you will have to modify some configuration files ([scDEA.covariates.tab](/scDEA.covariates.tab), [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab), [pseudobulkDEA_limmadream.covariates.tab](/pseudobulkDEA_limmadream.covariates.tab), and [pseudobulkDEA_limmadream.aggregates.tab](/pseudobulkDEA_limmadream.aggregates.tab))
+1. If you have biological replicates (e.g., stimulated vs. non-stimulated samples from the same donor, etc...), you will have to modify some configuration files ([scDEA.covariates.tab](/scDEA.covariates.tab), [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab)).
 2. If you have technical replicates, we will only select the sample with the largest number of cells.
 
 * In these analyses, we are only using European individuals and non-stimulated samples, which have been previously selected in WG3 (I) pipeline.
@@ -21,7 +21,7 @@ If you have any questions or issues, feel free to open an issue or directly emai
 
 ## Required Software
 **R** >=4.1.2 version: You need to install the packages loaded in the:
-* Three main DEA scripts: [sc-DEA](/scDEA_MAST_glmer.R), [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R), and [pseudobulk-DEA outdated](/pseudobulkDEA_limmadream.R).
+* Two main DEA scripts: [sc-DEA](/scDEA_MAST_glmer.R) and [pseudobulk-DEA](/pseudobulkDEA_dreamlet.R).
 * Additional scripts in the [scripts](/scripts/) directory (which contain the functions called in the three main DEA scripts).
 
 -------
@@ -116,7 +116,7 @@ cd wg3-sc_pseudobulk_DEA
 ```
 
 * These analyses are meant to be run on scRNA-seq data composed by **only one sample per donor**:
-1. If you have biological replicates (e.g., stimulated vs. non-stimulated samples from the same donor, etc...), you will have to modify some configuration files ([scDEA.covariates.tab](/scDEA.covariates.tab), [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab), [pseudobulkDEA_limmadream.covariates.tab](/pseudobulkDEA_limmadream.covariates.tab), and [pseudobulkDEA_limmadream.aggregates.tab](/pseudobulkDEA_limmadream.aggregates.tab))
+1. If you have biological replicates (e.g., stimulated vs. non-stimulated samples from the same donor, etc...), you will have to modify some configuration files ([scDEA.covariates.tab](/scDEA.covariates.tab), [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab))
 2. If you have technical replicates, we will only select the sample with the largest number of cells.
 
 * In these analyses, we are only using European individuals and non-stimulated samples, which have been previously selected in WG3 (I) pipeline.
@@ -176,7 +176,7 @@ input_directory=input #default
 output_directory=pseudobulkDEA_dreamlet #default
 ```
 
-**2.** Running the **[pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R)**:
+**2.** Running the **[pseudobulk-DEA](/pseudobulkDEA_dreamlet.R)**:
 
 ```
 Rscript pseudobulkDEA_dreamlet.R -l $cell_level -c $cell_type -i $input_directory -o $output_directory
@@ -202,7 +202,7 @@ L1
 ```
 
 *Of note:*
-* You should **run** the [pseudobulk-DEA updated](/pseudobulkDEA_dreamlet.R) per **each combination** of Azimuth's cell level - cell type:
+* You should **run** the [pseudobulk-DEA](/pseudobulkDEA_dreamlet.R) per **each combination** of Azimuth's cell level - cell type:
     - Azimuth's cell level (`-l`): L1 or L2.
     - Cell type (`-c`): L1 and L2 cell types.
 
