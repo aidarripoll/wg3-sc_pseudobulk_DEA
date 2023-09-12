@@ -49,9 +49,9 @@ We have provided some **testing inputs** in the **[input directory](input/)** th
 **input/**    
 ```bash
 |-- L1
-|   |-- B.Exp.txt
-|   |-- B.Qced.Normalized.SCs.Rds
-|-- donor_pool_stim.txt
+|   |-- B.Qced.Normalized.SCs.Rds 
+|   |-- B.qtlInput.Pcs.txt
+|-- smf.txt
 
 ````
 
@@ -60,8 +60,8 @@ We have provided some **testing inputs** in the **[input directory](input/)** th
 ```bash
 |-- input
 |   |-- L1
-|   |   |-- B.Exp.txt
-|   |   |-- B.Qced.Normalized.SCs.Rds
+|   |   |-- B.Qced.Normalized.SCs.Rds 
+|   |   |-- B.qtlInput.Pcs.txt
 |   |-- smf.txt
 |-- scDEA.covariates.tab 
 |-- pseudobulkDEA_dreamlet.covariates.tab 
