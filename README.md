@@ -7,8 +7,8 @@ We provide **two main scripts** to perform **differential expression analysis (D
 
 **Of note**: 
 * These analyses are meant to be run on scRNA-seq data composed by **only one sample per donor**. Some considerations:
-- If you have biological replicates (e.g., stimulated vs. non-stimulated samples from the same donor, etc...), you will have to modify some configuration files ([scDEA.covariates.tab](/scDEA.covariates.tab), [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab)).
-- If you have technical replicates, we will only select the sample with the largest number of cells.
+1. If you have biological replicates (e.g., stimulated vs. non-stimulated samples from the same donor, etc...), you will have to modify some configuration files ([scDEA.covariates.tab](/scDEA.covariates.tab), [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab)).
+2. If you have technical replicates, we will only select the sample with the largest number of cells.
 
 * In these analyses, we are only using European individuals and non-stimulated samples, which have been previously selected in WG3 (I) pipeline.
   
