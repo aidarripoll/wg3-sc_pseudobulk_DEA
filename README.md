@@ -92,7 +92,7 @@ A priori, these files should not be modified. Each tsv file has:
 | ------------- | ------------- | ------------- | 
 | SEX  | fixed  | factor  | 
 | age  | fixed  | integer  | 
-| Donor_Pool  | random  | factor  | 
+| Donor  | random  | factor  | 
 | Pool  | random  | factor  | 
 
 **2.2. pseudobulk-DEA** ([pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab)):
