@@ -125,7 +125,7 @@ cd wg3-sc_pseudobulk_DEA
 
 
 ### Running the sc-DEA script
-**1.** Set common environmental variables:  
+**1.** Set common environment variables:  
 ```
 cell_level=L1 #default
 cell_type=B
@@ -139,6 +139,13 @@ output_directory=scDEA_MAST_glmer #default
 ```
 Rscript scDEA_MAST_glmer.R -l $cell_level -c $cell_type -v $phenotype -i $input_directory -o $output_directory
 ```
+
+*Of note:*
+* If you are using the **WG3 singularity image**, you should set another common environment variable: `covariates_file=/tools/wg3-sc_pseudobulk_DEA/scDEA.covariates.tab` and run **[sc-DEA](/scDEA_MAST_glmer.R)** as:
+
+ ```
+Rscript scDEA_MAST_glmer.R -l $cell_level -c $cell_type -v $phenotype --covariates $covariates_file -i $input_directory -o $output_directory
+``` 
 
 The output directory (**[scDEA_MAST_glmer/](/scDEA_MAST_glmer/))** has the following structure:
 ```bash
@@ -166,9 +173,14 @@ L1
     - Cell type (`-c`): L1 and L2 cell types.
     - Phenotype (`-v`): SEX and age.
 
+**3.** Additional parameters: 
+* If your dataset contains data from more than one study that has been previously merged into one [QC-filtered Seurat object](/input/L1/B.Qced.Normalized.SCs.Rds), you should set the argument `--combined_data TRUE` to control for the differences between studies.
+
+* If your dataset contains data from more than one genetic ancestry, you should set the argument `--genoPC1 TRUE` to control for the differences between ancestries.
+  
 ### Running the pseudobulk-DEA script
 
-**1.** Set common environmental variables:  
+**1.** Set common environment variables:  
 ```
 cell_level=L1 #default
 cell_type=B
@@ -181,6 +193,13 @@ output_directory=pseudobulkDEA_dreamlet #default
 ```
 Rscript pseudobulkDEA_dreamlet.R -l $cell_level -c $cell_type -i $input_directory -o $output_directory
 ```
+
+*Of note:*
+* If you are using the **WG3 singularity image**, you should set another common environment variable: `covariates_file=/tools/wg3-sc_pseudobulk_DEA/pseudobulkDEA_dreamlet.covariates.tab` and run **[pseudobulk-DEA](/pseudobulkDEA_dreamlet.R)** as:
+
+ ```
+Rscript pseudobulkDEA_dreamlet.R -l $cell_level -c $cell_type --covariates $covariates_file -i $input_directory -o $output_directory
+``` 
 
 The output directory (**[pseudobulkDEA_dreamlet/](/pseudobulkDEA_dreamlet/)**) has the following structure:
 ```bash
@@ -210,13 +229,12 @@ L1
 
 * It runs the **pseudobulk-DEA** on the 'fixed' variables in [pseudobulkDEA_dreamlet.covariates.tab](/pseudobulkDEA_dreamlet.covariates.tab)
 
-**3.** Additional parameters of [pseudobulk-DEA](/pseudobulkDEA_dreamlet.R):
+**3.** Additional parameters: 
+* If your dataset contains data from more than one study that has been previously merged into one [QC-filtered Seurat object](/input/L1/B.Qced.Normalized.SCs.Rds), you should set the argument `--combined_data TRUE` to control for the differences between studies.
 
-**3.1.** If you do not want to estimate the variance of your batch variable (Pool), you can set the argument `--vp_reduced TRUE`. The structure of the output directory will be the same as the previous one but it will have a subdirectory called 'vp_reduced'. 
-
-**3.2.** If your dataset contains data from more than one study that has been previously merged into one [QC-filtered Seurat object](/input/L1/B.Qced.Normalized.SCs.Rds), you should set the argument `--combined_data TRUE` to control for the differences between studies.
-
-**3.3.** If your dataset contains data from more than one genetic ancestry, you should set the argument `--genoPC1 TRUE` to control for the differences between ancestries. "
+* If your dataset contains data from more than one genetic ancestry, you should set the argument `--genoPC1 TRUE` to control for the differences between ancestries.
+  
+* If you do not want to estimate the variance of your batch variable (Pool), you can set the argument `--vp_reduced TRUE`. The structure of the output directory will be the same as the previous one but it will have a subdirectory called 'vp_reduced'. 
 
 -------
 
