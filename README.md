@@ -38,13 +38,13 @@ cd wg3-sc_pseudobulk_DEA
 ```
 
 ### Test Data
-We have provided some **testing inputs** in the **[input directory](input/)** that contains the B cells outputs (Azimuth's level 1) from WG3 (I) pipeline. 
+We have provided some **testing inputs** in the **[input directory](/input/)** that contains the B cells outputs (Azimuth's level 1) from WG3 (I) pipeline. 
 
 **Of note**: 
 
 * These files have been anonymized and they are significantly down-sized and sub-sampled versions of the whole B cells outputs from WG3 (I). The total number of cells is 663 from 40 donors, and the number of genes is 100.
 
-* Here is the structure of the [testing input directory](/input/). This input directory (*input/*) should have the same structure as the WG3 (I) pipeline output directory. We will need only the following files since the other ones will be used for the eQTL calling pipeline in the WG3 (II):
+* Here is the structure of the [testing input directory](/input/). This directory should have the same structure as the WG3 (I) pipeline output directory. We will need only the following files since the other ones will be specifically used for the eQTL calling pipeline in the WG3 (II):
 
 **input/**    
 ```bash
