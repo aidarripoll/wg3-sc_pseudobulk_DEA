@@ -1,5 +1,0 @@
-covariate type  class
-SEX fixed  factor
-age  fixed  integer
-Donor  random factor
-Pool  random factor
