@@ -17,108 +17,13 @@ shhh(library(stringr))
 shhh(library(sparseMatrixStats))
 
 ######################## Functions used in scDEA_MAST_glmer.R ##################
-# 1. Modify metadata
-modify_metadata_sc <- function(so, phenotype, covs_df){
-  # Grab metadata
-  metadata <- so@meta.data
-  cells_all <- nrow(metadata)
-  print(paste0('Number of initial cells: ', cells_all))
-    
-  # Create random factors variables in the metadata
-  metadata <- metadata %>% separate(Donor_Pool, c('Donor', 'Pool'), ';;')
-  
-  # Remove possible NAs
-  print('Removing potential NAs in the main phenotypes...')
-  sex_na.boolean <- any(is.na(metadata[['SEX']]))
-  if(sex_na.boolean){
-    n_na <- table(is.na(metadata[['SEX']]))[['TRUE']]
-    print(paste0('SEX NAs: ', n_na))
-    metadata <- metadata[-which(is.na(metadata[['SEX']])),]
-  }
-  age_na.boolean <- any(is.na(metadata[['age']]))
-  if(age_na.boolean){
-    n_na <- table(is.na(metadata[['age']]))[['TRUE']]
-    print(paste0('age NAs: ', n_na))
-    metadata <- metadata[-which(is.na(metadata[['age']])),]
-  }
-  cells_notna <- nrow(metadata)
-  print(paste0('Number of not NA cells: ', cells_notna))
-
-  # Phenotype modifications
-  if(phenotype=='SEX'){
-    print(paste0('Relevel ', phenotype, '...'))
-    metadata[[phenotype]] <-  ifelse(metadata[[phenotype]]==1,'M','F')
-  }
-  
-  if(phenotype=='age_cat'){
-    print(paste0('Creating a new metadata variable: ', phenotype, '...'))
-    metadata[[phenotype]] <- ifelse(metadata$age<=40, 'Y',
-                                    ifelse(metadata$age>=60, 'O', 'M'))
-    # metadata <- metadata[metadata[[phenotype]]%in%c('Y','O'),] #only keep Y and O samples (remove if we want to consider all samples)
-  }
-  
-  if(phenotype=='age_cat_all'){
-    print(paste0('Creating a new metadata variable: ', phenotype, '...'))
-    metadata[[phenotype]] <- ifelse(metadata$age<=40, 'Y', 'O')
-  }
-  
-  if(phenotype=='age_squared'){
-    print(paste0('Creating a new metadata variable: ', phenotype, '...'))
-    metadata[[phenotype]] <- metadata$age^2
-  }
-  
-  # Report possible NAs
-  print('Removing potential remaining NAs in the tested phenotype...')
-  phe_na.boolean <- any(is.na(metadata[[phenotype]]))
-  if(phe_na.boolean){
-    n_na <- table(is.na(metadata[[phenotype]]))[['TRUE']]
-    print(paste0(phenotype, ' NAs: ', n_na))
-    metadata <- metadata[-which(is.na(metadata[[phenotype]])),]
-  }
-  cells_notna <- nrow(metadata)
-  print(paste0('Number of not NA cells: ', cells_notna))
-
-  if(phenotype%in%c('SEX','age_cat', 'age_cat_all')){
-    print(paste0('Order ', phenotype, ' factor levels...'))
-    Group_order <- c('M','F')
-    if(phenotype%in%c('age_cat', 'age_cat_all')){
-      # Group_order <- c('Y','O')
-      if(phenotype%in%c('age_cat')){Group_order <- c('Y','M','O')}
-      if(phenotype%in%c('age_cat_all')){Group_order <- c('Y','O')}
-    }
-    metadata[[phenotype]] <- factor(metadata[[phenotype]],
-                                    levels = Group_order)
-    levels(metadata[[phenotype]])
-  }
-  
-  # Declare factors
-  factor_vars <- covs_df[covs_df$class=='factor',]$covariate
-  if(phenotype%in%c('age_cat','age_cat_all')){
-    factor_vars <- c(factor_vars, phenotype)
-  }
-  metadata %>% 
-    mutate_at(all_of(factor_vars), as.factor) %>%
-    as.data.frame() -> metadata
-  metadata %>% 
-    mutate_at(all_of(factor_vars), droplevels) %>%
-    as.data.frame() -> metadata
-  
-  # Add new metadata
-  cells_kept <- rownames(metadata)
-  so <- so[,cells_kept]
-  so@meta.data <- metadata
-  rownames(so@meta.data) <- so@meta.data$Barcode
-
-  return(so)
-}
-
-# 2. Convert Seurat object to SCE object; and then from SCE object to SCA object
+# 1. Convert Seurat object to SCE object; and then from SCE object to SCA object
 so_to_sca <- function(so){
   sca <- as(as.SingleCellExperiment(so), 'SingleCellAssay')
   return(sca)
 }
 
-# 3. Calculate the frequency of expression (i.e., the proportion of non-zero values in sc) --> mymic MAST::freq() but using sparseMatrixStats package which is faster
+# 2. Calculate the frequency of expression (i.e., the proportion of non-zero values in sc) --> mymic MAST::freq() but using sparseMatrixStats package which is faster
 freq_sparse <- function(sc, na.rm = TRUE){
   stopifnot(is(sc, "SingleCellAssay"))
   sc_mat <- t(assay(sc, withDimnames = FALSE)) > 0
@@ -126,9 +31,8 @@ freq_sparse <- function(sc, na.rm = TRUE){
   names(out) <- colnames(sc_mat)
   return(out)
   }
-
   
-# 4. Filter out lowly variable genes --> CDR (=cngeneson; cellular detection rate) --> Filter out lowly expressed genes
+# 3. Filter out lowly variable genes --> CDR (=cngeneson; cellular detection rate) --> Filter out lowly expressed genes
 preprocess_sca <- function(sca, freq_expr = 0.1){
   # Initial # of genes
   ngenes_inital <- nrow(sca)
@@ -163,7 +67,7 @@ preprocess_sca <- function(sca, freq_expr = 0.1){
   return(sca)
 }
 
-# 5. scDEA with MAST glmer
+# 4. scDEA with MAST glmer
 de_glmer.func <- function(sca_object, contrast, fixed_effects, random_effects, res, out_dir){
   # sc-DEA with MAST glmer (zlm)
   print(paste0('Testing: ', contrast))
@@ -223,7 +127,7 @@ de_glmer.func <- function(sca_object, contrast, fixed_effects, random_effects, r
   return(summaryDt)
 }
 
-# 6. Get sc-DEGs from MAST glmer output
+# 5. Get sc-DEGs from MAST glmer output
 get_degs <- function(summaryDt, phenotype){
   contrast_LRT <- phenotype
   if(phenotype%in%c('SEX','age_cat', 'age_cat_all')){

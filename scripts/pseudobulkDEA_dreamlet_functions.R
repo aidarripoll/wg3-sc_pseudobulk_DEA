@@ -11,6 +11,7 @@ shhh(library(zenith))
 shhh(library(scater))
 shhh(library(plyr))
 shhh(library(dplyr))
+shhh(library(tidyr))
 shhh(library(reshape2))
 shhh(library(stringi))
 shhh(library(stringr))
@@ -18,80 +19,7 @@ shhh(library(ggplot2))
 shhh(library(RColorBrewer))
 
 ######################## Functions used in pseudobulkDEA_limmadream.R ##################
-# 1. Modify sc-metadata
-modify_metadata_sc <- function(so, phes, covs_df){
-  # Grab metadata
-  metadata <- so@meta.data
-  cells_all <- nrow(metadata)
-  print(paste0('Number of initial cells: ', cells_all))
-  
-  # Remove possible NAs
-  for (i in phes){
-    na.boolean <- any(is.na(metadata[[i]]))
-    if(na.boolean){
-      print('Removing NAs in the phenotype...')
-      metadata <- metadata[-which(is.na(metadata[[i]])),]
-      cells_notna <- nrow(metadata)
-      print(paste0('Number of not NA cells: ', cells_notna))
-    }
-  }
-  
-  # Create random factors variables in the metadata
-  metadata[c('Donor','Pool')] <- str_split_fixed(metadata$Donor_Pool, ';;', 2)
-  
-  # Phenotype modifications
-  if('SEX'%in%phes){
-    print(paste0('Relevel SEX...'))
-    metadata[['SEX']] <-  ifelse(metadata[['SEX']]==1,'M','F')
-    Group_order <- c('M','F')
-    metadata[['SEX']] <- factor(metadata[['SEX']],
-                                levels = Group_order)
-  }
-  
-  if('age_cat'%in%phes){
-    print(paste0('Creating a new metadata variable: age_cat...'))
-    metadata[['age_cat']] <- ifelse(metadata$age<=40, 'Y',
-                                    ifelse(metadata$age>=60, 'O', 'M'))
-    metadata <- metadata[metadata[['age_cat']]%in%c('Y','O'),] #only keep Y and O samples (remove if we want to consider all samples)
-    Group_order <- c('Y','M','O')
-    metadata[['age_cat']] <- factor(metadata[['age_cat']],
-                                    levels = Group_order)
-  }
-  
-  if('age_cat_all'%in%phes){
-    print(paste0('Creating a new metadata variable:  age_cat_all...'))
-    metadata[['age_cat_all']] <- ifelse(metadata$age<=40, 'Y', 'O')
-    Group_order <- c('Y','O')
-    metadata[['age_cat_all']] <- factor(metadata[['age_cat_all']],
-                                        levels = Group_order)
-  }
-  
-  if('age_squared'%in%phes){
-    print(paste0('Creating a new metadata variable: age_squared...'))
-    metadata[['age_squared']] <- metadata$age^2
-  }
-  
-  # Declare factors
-  factor_vars <- covs_df[covs_df$class=='factor',]$covariate
-  metadata %>% 
-    mutate_at(all_of(factor_vars), as.factor) %>%
-    as.data.frame() -> metadata
-  metadata %>% 
-    mutate_at(all_of(factor_vars), droplevels) %>%
-    as.data.frame() -> metadata
-  
-  # Add new metadata
-  cells_final <- nrow(metadata)
-  print(paste0('Number of final cells: ', cells_final))
-  cells_kept <- rownames(metadata)
-  so <- so[,cells_kept]
-  so@meta.data <- metadata
-  rownames(so@meta.data) <- so@meta.data$Barcode
-  
-  return(so)
-}
-
-# 2. Get contrasts
+# 1. Get contrasts
 get_coefName <- function(phe, so){
   md <- so@meta.data
   contrast_var <- phe
@@ -102,7 +30,7 @@ get_coefName <- function(phe, so){
   return(contrast_var)
 }
 
-# 3. Define formula (VP or DEA)
+# 2. Define formula (VP or DEA)
 define_form <- function(gt, df, vp){
   # forms
   print(gt)
@@ -136,9 +64,22 @@ define_form <- function(gt, df, vp){
   random.hex <- brewer.pal(9, 'Greys')[7]
   residuals.hex <- brewer.pal(9, 'Greys')[3]
   cols_vars <- c(sex.hex, age.hex, random.hex, residuals.hex)
-  names(cols_vars) <- c(fixed_var_dea, random_var_dea, 'Residuals')
+  names(cols_vars) <- c(fixed_var_dea[c(1,2)], random_var_dea[1], 'Residuals')
+  if(length(random_var_dea)>1 | length(fixed_var_dea)>1){
+    if(length(random_var_dea)>1){
+      random_added.hex <- brewer.pal(9, 'Greys')[5]
+      names(random_added.hex) <- random_var_dea[2]
+      cols_vars <- c(cols_vars, random_added.hex)
+    }
+    if(length(fixed_var_dea)>1){
+      fixed_added.hex <- brewer.pal(9, 'Oranges')[5]
+      names(fixed_added.hex) <- fixed_var_dea[3]
+      cols_vars <- c(cols_vars, fixed_added.hex)
+    }
+  }
   model_vars_in <- c(model_vars, 'Residuals')
   cols_vars <- cols_vars[names(cols_vars)%in%model_vars_in]
+  cols_vars <- cols_vars[match(model_vars_in, names(cols_vars))]
   
   # output
   out <- list(form = form,
@@ -147,7 +88,7 @@ define_form <- function(gt, df, vp){
   return(out)
 }
 
-# 4. DEA extract and plots
+# 3. DEA extract and plots
 extract_plots <- function(i, dea_res, contrast_var, vp_res, cols, o_dir){
   # Extract results (topTable --> DEGs)
   ### Each entry in res.dl stores a model fit by dream(), and results can be extracted using topTable() as in limma by specifying the coefficient of interest. 
@@ -213,7 +154,7 @@ extract_plots <- function(i, dea_res, contrast_var, vp_res, cols, o_dir){
   return(res)
 } 
 
-# 5. DEA + VP extract and plots (by phenotype)
+# 4. DEA + VP extract and plots (by phenotype)
 extract_plots_by_phe <- function(phe, dea_res, vp_res, c_list, cols, o_dir){
   print(phe)
   
@@ -234,8 +175,8 @@ extract_plots_by_phe <- function(phe, dea_res, vp_res, c_list, cols, o_dir){
   return(res)
 }
 
-# 6. dreamer
-dreamlet.func <- function(ge_dge, covariates, contrast_list, vp_reduced, gene_test = c('VP','DEA'), out_dir = out.dir){
+# 5. dreamer
+dreamlet.func <- function(ge_dge, covariates, contrast_list, vp_reduced, out_dir, gene_test = c('VP','DEA')){
   ### Defining the VP/DEA formulas ###
   print('Defining the VP/DEA formulas...')
   gene_test.forms <- sapply(gene_test, function(i) define_form(i, covariates, vp_reduced), simplify = FALSE)
@@ -308,6 +249,3 @@ dreamlet.func <- function(ge_dge, covariates, contrast_list, vp_reduced, gene_te
   
   return(res)
 }
-
-
-
