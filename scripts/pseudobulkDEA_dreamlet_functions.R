@@ -176,7 +176,7 @@ extract_plots_by_phe <- function(phe, dea_res, vp_res, c_list, cols, o_dir){
 }
 
 # 5. dreamer
-dreamlet.func <- function(ge_dge, covariates, contrast_list, vp_reduced, out_dir, gene_test = c('VP','DEA')){
+dreamlet.func <- function(ge_dge, covariates, min_prop, contrast_list, vp_reduced, out_dir, gene_test = c('VP','DEA')){
   ### Defining the VP/DEA formulas ###
   print('Defining the VP/DEA formulas...')
   gene_test.forms <- sapply(gene_test, function(i) define_form(i, covariates, vp_reduced), simplify = FALSE)
@@ -185,7 +185,7 @@ dreamlet.func <- function(ge_dge, covariates, contrast_list, vp_reduced, out_dir
   # Run processAssays()
   form <- gene_test.forms$DEA$form
   print('Normalizing the pseudobulk-data...')
-  system.time(res.proc <- processAssays(ge_dge, form, min.count=5))
+  system.time(res.proc <- processAssays(ge_dge, form, min.count=5, min.prop=min_prop))
   
   # View details of dropping samples
   details(res.proc)
