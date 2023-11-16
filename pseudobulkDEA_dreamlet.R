@@ -10,6 +10,8 @@ option_list = list(
               help="Cell types in the low cell level resolution (l1) or in the high cell level resolution (l2)"),
   make_option(c("--covariates"), action="store", default='pseudobulkDEA_dreamlet.covariates.tab', type='character',
               help="Covariates file."),
+  make_option(c("--min_prop"), action="store", default=0.2, type='double',
+              help="In dreamlet::processAssays(), minimum proportion of retained samples with non-zero counts for a gene to be retained."),
   make_option(c("--vp_reduced"), action="store", default=FALSE, type='logical',
               help="Not estimate the effect of the batch factor in the VariancePartition analysis."),
   make_option(c("--combined_data"), action="store", default=FALSE, type='logical',
@@ -29,7 +31,7 @@ cwd <- getwd()
 setwd(cwd)
 
 # Loading functions
-functions.fn <- '/tools/wg3-sc_pseudobulk_DEA/scripts/pseudobulkDEA_dreamlet_functions.R'
+functions.fn <- 'scripts/pseudobulkDEA_dreamlet_functions.R'
 print(paste0('Loading functions from: ', functions.fn))
 source(functions.fn)
 
@@ -207,6 +209,7 @@ cat('\n')
 print('Running dreamlet...')
 system.time(dreamlet.res <- dreamlet.func(ge_dge = pb,
                                           covariates = covs.df, 
+                                          min_prop = opt$min_prop,
                                           contrast_list = contrast_coefName.list, 
                                           vp_reduced = opt$vp_reduced,
                                           out_dir = out.dir))
