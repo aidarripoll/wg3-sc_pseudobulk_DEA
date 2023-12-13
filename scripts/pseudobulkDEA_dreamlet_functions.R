@@ -25,7 +25,12 @@ get_coefName <- function(phe, so){
   contrast_var <- phe
   if(is.factor(md[[phe]])){
     contrast_var.levels <- levels(md[[phe]])
-    contrast_var <- paste0(phe, contrast_var.levels[[2]])
+    if(length(contrast_var.levels)>1){
+      contrast_var <- paste0(phe, contrast_var.levels[[2]])
+    }else{
+      print(paste0(phe, ' only has 1 level: ', contrast_var.levels, '. NOT consider this phenotype.'))
+      contrast_var <- NULL
+    }
   }
   return(contrast_var)
 }
@@ -52,7 +57,10 @@ define_form <- function(gt, df, vp){
   fixed_var <- df[df$type=='fixed',]$covariate
   fixed.fmla <- paste(fixed_var,collapse='+')
   random_var <- df[df$type=='random',]$covariate
-  random.fmla <- paste(paste0('(1|',random_var,')'),collapse='+')
+  random.fmla <- NULL
+  if(length(random_var)>0){
+    random.fmla <- paste(paste0('(1|',random_var,')'),collapse='+')
+  }
   form_vars <- paste(c(fixed.fmla,random.fmla), collapse='+')
   form_vars <- paste0('~',form_vars)
   print(paste0('Fitting lmer: ',form_vars))
@@ -133,7 +141,7 @@ extract_plots <- function(i, dea_res, contrast_var, vp_res, cols, o_dir){
     ### VP plots ###
     # Pick only DEGs in the VP results
     vp_res.degs <- vp_res[vp_res$gene%in%degs,]
-    cnames <- c('assay','gene', names(cols))
+    cnames <- colnames(vp_res.degs)
     vp_res.degs <- vp_res.degs[,match(cnames, colnames(vp_res.degs))]
     vp_res.degs <- vp_res.degs[match(degs, vp_res.degs$gene),]
     
@@ -152,7 +160,7 @@ extract_plots <- function(i, dea_res, contrast_var, vp_res, cols, o_dir){
   cat('\n')
   res <- topTable.res
   return(res)
-} 
+}
 
 # 4. DEA + VP extract and plots (by phenotype)
 extract_plots_by_phe <- function(phe, dea_res, vp_res, c_list, cols, o_dir){
