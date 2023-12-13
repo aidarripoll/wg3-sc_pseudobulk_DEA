@@ -67,7 +67,26 @@ preprocess_sca <- function(sca, freq_expr = 0.1){
   return(sca)
 }
 
-# 4. scDEA with MAST glmer
+# 4. Check model variables and remove terms
+drop_terms <- function(x, sca_object){
+  print(x)
+  sca_md <- as.data.frame(colData(sca_object))
+  var.boolean <- TRUE
+  if(class(sca_md[[x]])%in%c('numeric', 'integer')){
+    print('Checking variance>0...')
+    x_var <- stats::var(sca_md[[x]])
+    if(x_var==0){var.boolean <- FALSE}
+  }else{
+    print('Checking nLevels>1...')
+    x_nlevels <- length(unique(sca_md[[x]]))
+    if(x_nlevels==1){var.boolean <- FALSE}
+  }
+  print(var.boolean)
+  cat('\n')
+  return(var.boolean)
+}
+
+# 5. scDEA with MAST glmer
 de_glmer.func <- function(sca_object, contrast, fixed_effects, random_effects, res, out_dir){
   # sc-DEA with MAST glmer (zlm)
   print(paste0('Testing: ', contrast))
@@ -127,7 +146,7 @@ de_glmer.func <- function(sca_object, contrast, fixed_effects, random_effects, r
   return(summaryDt)
 }
 
-# 5. Get sc-DEGs from MAST glmer output
+# 6. Get sc-DEGs from MAST glmer output
 get_degs <- function(summaryDt, phenotype){
   contrast_LRT <- phenotype
   if(phenotype%in%c('SEX','age_cat', 'age_cat_all')){
