@@ -245,9 +245,13 @@ if(opt$phenotype%in%c('age_cat', 'age_cat_all')){
   contrast.var_out <- 'age'
 }
 fixed_effects.vars <- fixed_effects.vars[!fixed_effects.vars%in%contrast.var_out]
-
+fixed_effects.keep <- unlist(sapply(fixed_effects.vars, function(i) drop_terms(i, sca), simplify=FALSE))
+fixed_effects.vars <- fixed_effects.vars[fixed_effects.keep]
+  
 ## Random effects
 random_effects.vars <- covs.df[covs.df$type=='random',]$covariate
+random_effects.keep <- unlist(sapply(random_effects.vars, function(i) drop_terms(i, sca), simplify=FALSE))
+random_effects.vars <- random_effects.vars[random_effects.keep]
 
 # Run sc-DEA
 # Testing
