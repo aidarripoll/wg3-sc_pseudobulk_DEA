@@ -179,7 +179,8 @@ if(!all(cov_vars%in%metadata_vars)){
 ################################ Aggregate to pseudobulk ################################
 # Get contrasts according to the phenotypes
 contrast_coefName.list <- sapply(phenotypes, function(i) get_coefName(i, pbmc), simplify = FALSE)
-
+contrast_coefName.list <- Filter(Negate(is.null), contrast_coefName.list)
+                                 
 # Convert Seurat object to SCE object
 print('Convert Seurat to SCE object...')
 sce <- as.SingleCellExperiment(pbmc)
