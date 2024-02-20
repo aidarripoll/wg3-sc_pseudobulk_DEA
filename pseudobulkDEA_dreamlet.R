@@ -184,6 +184,9 @@ contrast_coefName.list <- Filter(Negate(is.null), contrast_coefName.list)
 # Convert Seurat object to SCE object
 print('Convert Seurat to SCE object...')
 sce <- as.SingleCellExperiment(pbmc)
+# sce_fn <- paste0(out.dir, 'sce.rds')
+# print(paste0('Saving SCE object: ', sce_fn))
+# saveRDS(sce, sce_fn)
 cat('\n')
 
 # Aggregate to pseudobulk: Dreamlet, like muscat, performs analysis at the pseudobulk-level by summing raw counts across cells for a given sample and cell type. 
@@ -197,6 +200,9 @@ system.time(pb <- aggregateToPseudoBulk(sce,
                                         cluster_id = "cell_type", 
                                         sample_id = "Donor_Pool",
                                         verbose = FALSE))
+pb_fn <- paste0(out_dir, 'aggregateToPseudoBulk.rds')
+print(paste0('Saving aggregateToPseudoBulk results: ', pb_fn))
+saveRDS(pb, pb_fn)
 pb_raw <- pb
 cat('\n')
 
