@@ -193,7 +193,11 @@ dreamlet.func <- function(ge_dge, covariates, min_prop, contrast_list, vp_reduce
   # Run processAssays()
   form <- gene_test.forms$DEA$form
   print('Normalizing the pseudobulk-data...')
-  system.time(res.proc <- processAssays(ge_dge, form, min.count=5, min.prop=min_prop))
+  system.time(res.proc <- processAssays(ge_dge, form, 
+                                        min.cells = 10, 
+                                        min.count = 10, 
+                                        min.samples = 4, 
+                                        min.prop = min_prop))
   
   # View details of dropping samples
   details(res.proc)
