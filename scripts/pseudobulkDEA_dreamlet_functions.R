@@ -252,7 +252,8 @@ dreamlet.func <- function(ge_dge, covariates, min_prop, contrast_list, vp_reduce
                                                                       o_dir = out_dir), simplify = FALSE)
   
   ### Save outputs ###
-  res <- list(dea = res.dl,
+  res <- list(processed = res.proc,
+              dea = res.dl,
               vp = vp.lst,
               topTable = extract_plots_by_phe.res)
   res_fn <- paste0(out_dir, 'dea_vp_topTable.rds')
