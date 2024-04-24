@@ -200,7 +200,7 @@ system.time(pb <- aggregateToPseudoBulk(sce,
                                         cluster_id = "cell_type", 
                                         sample_id = "Donor_Pool",
                                         verbose = FALSE))
-pb_fn <- paste0(out_dir, 'aggregateToPseudoBulk.rds')
+pb_fn <- paste0(out.dir, 'aggregateToPseudoBulk.rds')
 print(paste0('Saving aggregateToPseudoBulk results: ', pb_fn))
 saveRDS(pb, pb_fn)
 pb_raw <- pb
