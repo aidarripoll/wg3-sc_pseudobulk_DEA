@@ -106,7 +106,6 @@ filter_donors <- function(so, smf_fn, qtlInput_Pcs_fn){
   ndonors <- length(unique(cell_md$Donor_Pool))
   qtlInput_Pcs <- read.table(qtlInput_Pcs_fn, header=T, row.names=1)
   smf <- read.delim(smf_fn, check.names = FALSE)
-  qtlInput_Pcs <- qtlInput_Pcs[,-1]
   smf.vec <- unique(smf$phenotype_id)
   qtlInput_Pcs.vec <- rownames(qtlInput_Pcs)
   donor_pool.vec <- intersect(smf.vec, qtlInput_Pcs.vec)
